@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { removeThingAsync, updateThingAsync,fetchThingsAsync } from '../store/thing'; 
+import { removeThingAsync, updateThingAsync } from '../store/thing'; 
 import ThingForm from './ThingForm';
 import styled from 'styled-components';
 
@@ -9,7 +9,7 @@ const Div = styled.div`
   margin: 40px;
   align-content: center;
   width:175px;
-  background-color: rgb(204, 255, 204);
+  background-color: rgb(255, 255, 204);
   border-radius: 25px;
   border: 5px outset rgb(255, 153, 153);
   &:hover {
@@ -18,9 +18,7 @@ const Div = styled.div`
 `;
 
 class ThingItem extends Component {
-    componentDidMount(){
-        this.props.fetchThingsAsync();
-       }
+   
   state = {
     editing: false
   }
@@ -56,11 +54,9 @@ class ThingItem extends Component {
   }
 }
 
-
-
 const mapDispatchToProps = (dispatch) => ({
   removeThingAsync: thing => dispatch(removeThingAsync(thing)),
-  updateThingAsync: thing => dispatch(updateThingAsync(thing)),fetchThingsAsync,
+  updateThingAsync: thing => dispatch(updateThingAsync(thing)),
 });
 
 ThingItem.propTypes = {

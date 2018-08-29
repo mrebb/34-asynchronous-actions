@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
+
 class ThingForm extends Component {
   
   constructor(props) {
@@ -8,8 +9,11 @@ class ThingForm extends Component {
     name: '',
     id: ''
     };
+
     const initialState = this.props.thing || this.defaultState;
+
     this.state =  {...initialState};
+
   }
   
   onSubmit = event => {
@@ -32,6 +36,7 @@ class ThingForm extends Component {
     return (
       <form onSubmit={this.onSubmit}>
         <input name="name" placeholder="thing" value={this.state.name} onChange={this.onChange} />
+        &nbsp;&nbsp;
         <button>{this.props.buttonText}</button>
       </form>
     );
@@ -43,4 +48,5 @@ ThingForm.propTypes = {
   buttonText: PropTypes.string.isRequired,
   thing: PropTypes.object,
 }
+
 export default ThingForm;

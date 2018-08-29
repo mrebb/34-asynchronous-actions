@@ -7,9 +7,6 @@ class Dashboard extends Component {
   componentDidMount(){
    this.props.fetchThingsAsync();
   }
-  createRandomThing() {
-    return { name: 'thing' + Math.floor(Math.random() * 100) };
-  }
   render() {
     return (
       <Fragment>
