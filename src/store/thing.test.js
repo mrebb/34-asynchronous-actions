@@ -1,4 +1,5 @@
-import reducer, { addThing, updateThing, removeThing,addThingAsync,updateThingAsync,removeThingAsync,ADD,UPDATE,DESTROY} from './thing';
+import  { addThing, updateThing, removeThing, addThingAsync, updateThingAsync, removeThingAsync, ADD, UPDATE, DESTROY } from './thing';
+const api = `https://internets-of-thing-api.herokuapp.com/api/v1/things`;
 import superagent from 'superagent';
 
 describe('thing state', () => {
@@ -7,7 +8,7 @@ describe('thing state', () => {
 
     it('should create add action', () => {
 
-      const thing = {name:'flower'};
+      const thing = { name: 'flower' };
 
       const action = addThing(thing);
 
@@ -17,7 +18,7 @@ describe('thing state', () => {
     });
     it('should create update action', () => {
 
-      const thing = {name:'roses'};
+      const thing = { name: 'roses' };
 
       const action = updateThing(thing);
 
@@ -27,7 +28,7 @@ describe('thing state', () => {
     });
     it('should create delete action', () => {
 
-      const thing = {name:'shelf'};
+      const thing = { name: 'shelf' };
 
       const action = removeThing(thing);
 
@@ -42,53 +43,83 @@ describe('thing state', () => {
 
     it('should add to empty list', (done) => {
 
-       superagent.get('https://internets-of-thing-api.herokuapp.com/api/v1/things').then((response)=>{
-        let things = response.body;
-      let initialState = things;
-      const thing = {name:'pen'};
-      addThingAsync(thing)
-      const action = addThing(thing)
-      const state = reducer(initialState,action);
-      expect(state.length).toBe(initialState.length +1);
-
-      expect(state[initialState.length].name).toBe(thing.name);
-      done()
+      superagent.get(`${api}`).then((response) => {
+        const initialState = response.body;
+        const thing = { name: 'pen' };
+        const promise = addThingAsync(thing);
+        promise(() => { }).then(things => {
+          expect(things.length).toBe(initialState.length + 1);
+          return things;
+        }).then(things=>{
+          let newThing =  things.find(thing=>{
+            return thing.name='pen';
+          });
+          removeThingAsync(newThing)(()=>{})
+            .then(res=>{
+              console.log(res);
+              done();
+            });
+        }
+        );
       }
       )
-      .catch(err=>console.log(err))
+        .catch(err => console.log(err));
     });
+    it('should update existing thing', (done) => {
 
-    it('should update thing', (done) => {
-      return superagent.get('https://internets-of-thing-api.herokuapp.com/api/v1/things').then((response)=>{
-        let things = response.body;
-      let initialState = things;
-      let targetId = things[0].id;
-      const thing = {name:'updatedThing',id:targetId};
-      const action = updateThing(thing);
-      const state = reducer(initialState,action);
+      superagent.get(`${api}`).then((response) => {
+        const initialState = response.body;
+        let testId = initialState[0].id;
+        let updatedName = 'bottle';
+        const thing = { name: updatedName,id:testId };
+        const promise = updateThingAsync(thing);
+        promise(()=>{}).then(()=>{superagent.get(`${api}`).then((response) => {
+          const updatedState = response.body;
+          expect(updatedState.length).toBe(initialState.length);
+          
+        })
+          .then(things=>{
+            let newThing =  things.find(thing=>{
+              return thing.name='bottle';
+            });
+            removeThingAsync(newThing)(()=>{})
+              .then(res=>{
+                console.log(res);
+                done();
+              });
+          });
+        done();
+        });
 
-      expect(state.length).toBe(initialState.length);
+        return initialState;
+      });
+        
+    });
+    it('should delete a thing', (done) => {
 
-      done();
+      superagent.get(`${api}`).then((response) => {
+        const initialState = response.body;
+        const thing = { name: 'flower' };
+        const promise = addThingAsync(thing);
+        promise(() => { }).then(things => {
+          expect(things.length).toBe(initialState.length + 1);
+          return things;
+        }).then(things=>{
+          let newThing =  things.find(thing=>{
+            return thing.name='flower';
+          });
+          removeThingAsync(newThing)(()=>{})
+            .then(res=>{
+              console.log(res);
+              done();
+            });
+        }
+        );
       }
       )
+        .catch(err => console.log(err));
     });
-    xit('should delete thing', () => {
 
-      const thing = {name:'burger'};
-
-      const addAction = addThing(thing);
-
-      let state = reducer({things:[]}, addAction);
-
-      const catToRemove = {...state.things[0]};
-
-      const deleteAction = removeThing(catToRemove);
-
-      const updatedState = reducer(state, deleteAction);
-
-      expect(updatedState.things.length).toBe(0);
-
-    });
+    
   });
 });
