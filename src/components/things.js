@@ -20,7 +20,7 @@ const Div = styled.div`
 class ThingItem extends Component {
    
   state = {
-    editing: false
+    editing: false,
   }
 
   onDelete = () => {
@@ -28,7 +28,7 @@ class ThingItem extends Component {
   }
 
   onEdit = () => {
-    this.setState({ editing: true })
+    this.setState({ editing: true });
   }
 
   onUpdate = (thing) => {
@@ -38,17 +38,17 @@ class ThingItem extends Component {
 
   render() {
     return (
-    <Div>
-      <li onDoubleClick={this.onEdit}>
-        <p>
-          {this.props.thing.name}
-        </p>
-        <p>
-          <button onClick={this.onDelete}>x</button>
-        </p>
+      <Div>
+        <li onDoubleClick={this.onEdit}>
+          <p>
+            {this.props.thing.name}
+          </p>
+          <p>
+            <button onClick={this.onDelete}>x</button>
+          </p>
 
-        {this.state.editing && <ThingForm onComplete={this.onUpdate} buttonText="Edit" thing={this.props.thing} />}
-      </li>
+          {this.state.editing && <ThingForm onComplete={this.onUpdate} buttonText="Edit" thing={this.props.thing} />}
+        </li>
       </Div>
     );
   }
@@ -63,7 +63,7 @@ ThingItem.propTypes = {
   removeThingAsync: PropTypes.func,
   updateThingAsync: PropTypes.func,
   thing: PropTypes.object,
-}
+};
 
 export default connect(null, mapDispatchToProps)(ThingItem);
 
