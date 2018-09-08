@@ -64,31 +64,43 @@ export function fetchThings(things) {
   };  
 }
 export function addThingAsync(thing) {
-
-  return dispatch => {
-    return superagent.post('https://internets-of-thing-api.herokuapp.com/api/v1/things')
-      .send(thing)
-      .then(()=>{
-        dispatch(addThing(thing));
-        return superagent.get('https://internets-of-thing-api.herokuapp.com/api/v1/things')
-          .then(response=>{
-            return response.body;})
-          .then((things)=>{
-            dispatch(fetchThings(things));
-            return things;});
-      });
-  };  
+  if(thing.name!==''){
+    return dispatch => {
+      return superagent.post('https://internets-of-thing-api.herokuapp.com/api/v1/things')
+        .send(thing)
+        .then(()=>{
+          dispatch(addThing(thing));
+          return superagent.get('https://internets-of-thing-api.herokuapp.com/api/v1/things')
+            .then(response=>{
+              return response.body;})
+            .then((things)=>{
+              dispatch(fetchThings(things));
+              return things;});
+        });
+    }; 
+  }
+  else{
+    return dispatch => {
+      dispatch(addThing(thing));
+    }; 
+  }
 }
 export function updateThingAsync(thing) {
-  
-  return dispatch => {
-    return superagent.put(`https://internets-of-thing-api.herokuapp.com/api/v1/things/${thing.id}`)
-      .send(thing)
-      .then(response=>{
-        dispatch(updateThing(thing));
-        return response.body;
-      });
-  };
+  if(thing.name!==''){
+    return dispatch => {
+      return superagent.put(`https://internets-of-thing-api.herokuapp.com/api/v1/things/${thing.id}`)
+        .send(thing)
+        .then(response=>{
+          dispatch(updateThing(thing));
+          return response.body;
+        });
+    };
+  }
+  else{
+    return dispatch => {
+      dispatch(updateThing(thing));
+    }; 
+  }
 }
 export function removeThingAsync(thing) {
   return dispatch => {

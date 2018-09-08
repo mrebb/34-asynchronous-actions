@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { addThing, addThingAsync,fetchThingsAsync } from '../store/thing';
-import Things from './things'
+import Things from './things';
 import ThingForm from './ThingForm';
 class Dashboard extends Component {
   componentDidMount(){
-   this.props.fetchThingsAsync();
+    this.props.fetchThingsAsync();
   }
   render() {
     return (
@@ -17,7 +17,7 @@ class Dashboard extends Component {
         {this.props.things.length ?
           
           <ul>
-            {this.props.things.map((thing,i) => {return <Things key={thing.id || i } thing={thing}/>})}
+            {this.props.things.map((thing,i) => {return <Things key={thing.id || i } thing={thing}/>;})}
           </ul>
           
           :
